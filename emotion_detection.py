@@ -4,9 +4,9 @@ import face_recognition
 import cv2
 import tflite_runtime.interpreter as tflite
 
-image_filename = "rageface.jpeg"
+image_filename = "images/image1.jpg"
 
-model_filename = "model.tflite"
+model_filename = "models/model.tflite"
 
 
 
@@ -33,7 +33,7 @@ image_edited = cv2.resize(image_edited, (48,48))
 image_edited = cv2.cvtColor(image_edited, cv2.COLOR_BGR2GRAY)
 
 # write the image to a file
-cv2.imwrite('image_edited.jpg', image_edited)
+# cv2.imwrite('image_edited.jpg', image_edited)
 
 emotion_dict = { \
                 '0': 'Angry', \
