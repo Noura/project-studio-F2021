@@ -24,11 +24,18 @@ PVector[] vectors;
 int timeElapsed; //milliseconds
 int imageCounter = 1;
 
+//adjusting the values for color in HSB hue, saturation and saturation, this happens within the loadNewImage function
+int pixelHue = 5;
+int pixelSaturation= 100;
+int pixelBrightness = 100;
+
+
 
 void setup() {
   strokeWeight(int(random(2, 20)));
   background(0);
   size(800, 600);
+  colorMode(HSB);
   //img.resize(width,height);
 
   //grabbing the values of emotions this is what you use to modify the functions
@@ -56,7 +63,7 @@ void draw() {
 
   int timeImageLoadedFor = millis() - timeElapsed;
 
-  if (timeImageLoadedFor>5000)
+  if (timeImageLoadedFor>25000)
   {
     clear();
     try {
@@ -81,12 +88,13 @@ void draw() {
   }
   if (sorrow>=1) {
     sorrow();
+    //filter(POSTERIZE,5);
     filter(GRAY);
   }
 
   if (anger>=1) {
     anger();
-    filter(POSTERIZE, 8);
+    //filter(POSTERIZE, 8);
     //filter(GRAY);
   }
   if (joy >= 1) {
@@ -109,6 +117,14 @@ void loadNewImage(int imageCounter) {
   surprise = json.getInt("surprise");
   sorrow = json.getInt("sorrow");
   timeElapsed = millis();
+  
+  //resizing image to fit width and haight, considering all images will be the same format
+  img.resize(width,height);
+  
+  //changing Hue Saturation and Brightness. This function could be applied 
+  //at each emotion effect level for more control if preferred
+  adjustColor();
+
 }
 
 // ANGER __________________________________________________
@@ -117,6 +133,7 @@ void loadNewImage(int imageCounter) {
 void anger() {
   if (millis() < 2000) {
     image(img, 0, 0);
+
   }
   //else{
   //  fill(0,20);  
@@ -192,7 +209,7 @@ void sorrow() {
 //function to initiate joy in setup
 void init_joy() {
   spread = joy;
-  inc = random(0.1, 0.8);
+  inc = random(0.1,0.8);
   num = 5000;
   col = random(255);
   cols = floor(width/spread)+1;
@@ -310,6 +327,22 @@ void surprise() {
     filter(POSTERIZE, 3);
   }
   //filter(THRESHOLD);
+}
+
+
+
+// SATURATION BRUGHTNESS ADJUSTMENT_______________________________
+
+void adjustColor() {
+    img.loadPixels();
+    for (int i = 0; i < img.pixels.length; i++) {
+        float hue = hue(img.pixels[i]);
+        float sat= saturation(img.pixels[i]);
+        float bright = brightness(img.pixels[i]);
+        img.pixels[i] = color(hue + pixelHue, sat +pixelSaturation, bright+ pixelBrightness);
+      }
+  img.updatePixels(); 
+
 }
 
 
