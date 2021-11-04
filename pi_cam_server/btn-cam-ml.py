@@ -5,6 +5,9 @@ import time
 import random
 import json
 import RPi.GPIO as GPIO
+import os
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = '/home/pi/thematic-envoy-319518-95fe136b7595.json'
 
 from functions import *
 
