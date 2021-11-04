@@ -1,10 +1,7 @@
 import io
-import os
 from picamera import PiCamera
 from google.cloud import vision
-from PIL import Image, ImageDraw
 import time
-import glob
 import random
 import json
 import RPi.GPIO as GPIO
