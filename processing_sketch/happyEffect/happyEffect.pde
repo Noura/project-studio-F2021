@@ -52,9 +52,10 @@ void setup() {
   }
 
   //surprise particle system make condiition here for surprise >1
-  if (joy >=1) {
+  //commenting out since it causes a bug with multiple images
+  //if (joy >=1) {
     init_joy();
-  }
+  //}
 }
 
 void draw() {
