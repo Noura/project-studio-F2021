@@ -53,18 +53,8 @@ def take_picture():
     takingPicture = True
 
     # blink the LED  to show the picture is being taken
-    camera.start_preview()
-    print('Taking picture in 5...')
-    ledPwm.ChangeDutyCycle(0)
-    time.sleep(.5)
-    ledPwm.ChangeDutyCycle(100)
-    time.sleep(.5)
-    print('4...')
-    ledPwm.ChangeDutyCycle(0)
-    time.sleep(.5)
-    ledPwm.ChangeDutyCycle(100)
-    time.sleep(.5)
-    print('3...')
+    #camera.start_preview()
+    print('Taking picture in 3...')
     ledPwm.ChangeDutyCycle(0)
     time.sleep(.5)
     ledPwm.ChangeDutyCycle(100)
@@ -82,16 +72,16 @@ def take_picture():
     print('takin pic')
     ledPwm.ChangeDutyCycle(0)
     camera.capture(__img_file_path())
-    camera.stop_preview()
+    #camera.stop_preview()
 
     ledPwm.ChangeDutyCycle(100)
-    time.sleep(0.25)
+    time.sleep(0.15)
     ledPwm.ChangeDutyCycle(0)
-    time.sleep(0.25)
+    time.sleep(0.15)
     ledPwm.ChangeDutyCycle(100)
-    time.sleep(0.25)
+    time.sleep(0.15)
     ledPwm.ChangeDutyCycle(0)
-    time.sleep(0.25)
+    time.sleep(0.15)
     ledPwm.ChangeDutyCycle(100)
 
     # Loads the image into memory
@@ -169,14 +159,11 @@ try:
             print('Button was pushed!')
             take_picture()
         else:
-            # Pulse the LED while waiting for a button press
-            ledPercentage = ledPercentage - 25.0
-            if(ledPercentage < 0.0):
-                ledPercentage = 100.0
-
-            time.sleep(0.4)
+            # button stays fully bright when waiting for a button press
+            ledPercentage = 100.0
+            # time.sleep(0.4)
             ledPwm.ChangeDutyCycle(ledPercentage)
-            print('.')
+            # print('.')
 
 except KeyboardInterrupt:
     print('exiting...')
