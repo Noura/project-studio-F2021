@@ -41,21 +41,10 @@ void setup() {
   //grabbing the values of emotions this is what you use to modify the functions
   loadNewImage(imageCounter);
 
-  //modifyers of anger
-  repforce = anger*2;
-  attforce = anger*0.2;
+  init_anger();
 
-  //anger particle system make a condition here for only if anger is >1
-  particles = new ArrayList<Particle>();
-  for (int i= 0; i< numParticle; i++) {
-    particles.add(new Particle(random(width), random(height), int(random(width)), int(random(height))));
-  }
-
-  //surprise particle system make condiition here for surprise >1
-  //commenting out since it causes a bug with multiple images
-  //if (joy >=1) {
-    init_joy();
-  //}
+  init_joy();
+  
 }
 
 void draw() {
@@ -80,6 +69,7 @@ void draw() {
     }
     finally {
       timeElapsed = millis();
+      reset_anger();
     }
 
   }
@@ -94,6 +84,8 @@ void draw() {
   }
 
   if (anger>=1) {
+    repforce = anger*2;
+    attforce = anger*0.2;
     anger();
     //filter(POSTERIZE, 8);
     //filter(GRAY);
@@ -130,6 +122,22 @@ void loadNewImage(int imageCounter) {
 
 // ANGER __________________________________________________
 
+void init_anger() {
+  repforce = 2;
+  attforce = 0.2;
+  particles = new ArrayList<Particle>();
+  for (int i= 0; i< numParticle; i++) {
+    particles.add(new Particle(random(width), random(height), int(random(width)), int(random(height))));
+  }
+}
+
+void reset_anger() {
+  for (int i = 0; i <particles.size(); i++) {
+    Particle p = particles.get(i);
+    p.reset();
+  }
+}
+  
 
 void anger() {
   if (millis() < 2000) {
@@ -151,7 +159,7 @@ void anger() {
 //particle class for anger function
 class Particle {
   PVector position, target, velocity, acceleration;
-  color color_joy;
+  color color_anger;
   int x_move;
   int y_move;
 
@@ -164,7 +172,7 @@ class Particle {
     target = position.copy();
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    color_joy =img.get(int(x), int(y));
+    color_anger =img.get(int(x), int(y));
   }
 
   void move() {
@@ -183,8 +191,16 @@ class Particle {
     position.add(velocity);
   }
   void display() {
-    stroke(color_joy, 90);
+    stroke(color_anger, 90);
     point(position.x, position.y);
+  }
+  
+  void reset() {
+    position.x = random(width);
+    position.y = random(height);
+    x_move = int(random(width));
+    y_move = int(random(height));
+    color_anger = img.get(int(position.x), int(position.y));
   }
 }
 
