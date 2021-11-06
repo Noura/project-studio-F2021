@@ -99,6 +99,7 @@ void draw() {
     //filter(GRAY);
   }
   if (joy >= 1) {
+    spread = joy;
     joy();
   }
 
@@ -233,7 +234,7 @@ void sorrow() {
 
 //function to initiate joy in setup
 void init_joy() {
-  spread = joy;
+  spread = 1;
   inc = random(0.1,0.8);
   num = 5000;
   col = random(255);
