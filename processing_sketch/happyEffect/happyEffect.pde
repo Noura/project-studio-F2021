@@ -1,6 +1,7 @@
 //anger inspired by ryoho https://openprocessing.org/sketch/1084140
 //sorrow inspired by the coding train pixel manipulation
 //joy inspired by artisan's https://openprocessing.org/sketch/696867
+//surprise inspired by the coding train painting with pixels https://www.youtube.com/watch?v=NbX3RnlAyGU&t=435s
 
 
 PImage img;
@@ -21,6 +22,11 @@ ArrayList<Particle_2> particles_2;
 float xoff, yoff, zoff, inc, col;
 int spread, cols, rows, num;
 PVector[] vectors;
+
+//array list and variables for the surprise particle system
+Particle_3[] particles_3;
+float b, c, vx, vy;
+
 int timeElapsed; //milliseconds
 int imageCounter = 1;
 
@@ -44,6 +50,8 @@ void setup() {
   init_anger();
 
   init_joy();
+  
+  init_surprise();
   
 }
 
@@ -334,17 +342,87 @@ class Particle_2 {
 }
 
 
-// SURPRISE  filler code to change -------------------------------------
+
+// SURPRISE  -------------------------------------
+void init_surprise(){
+  //particles_3 = newArrayList<Particle_3>();
+  particles_3 = new Particle_3[200];
+  for (int i = 0; i < particles_3.length; i++) {
+    particles_3[i] = new Particle_3();
+  }
+}
 
 void surprise() {
-  image(img, 0, 0);
-  if (millis()/1000%2==0) {
-    filter(INVERT);
-  } else {
-    filter(POSTERIZE, 3);
-  }
-  //filter(THRESHOLD);
+
+  //} else {
+  //  fill(255, 20);  
+  //  rect(0, 0, width, height);
+
+  for (int i = 0; i < particles_3.length; i++) {
+    particles_3[i].display_s();
+    particles_3[i].move_s();
+  
+ }
 }
+
+
+// particle class for surprise
+class Particle_3 {
+  float x_s;
+  float y_s;
+  
+  float vx;
+  float vy;
+  
+  Particle_3() {
+    x_s = width/2;
+    y_s =(height/2)+100;
+    float a = random(TAU);
+    float speed_s = random(3);
+    vx = cos(a)*speed_s;
+    vy = sin(a)*speed_s;
+  }
+  
+  void display_s(){
+    //noStroke();
+    color c_s = img.get(int(x_s), int(y_s));
+    fill(c_s);
+    //ellipse(x,y,30,30);
+    rect(x_s,y_s,30,30);
+  }
+  
+  void move_s(){
+    x_s = x_s + vx; // random(-5,5);
+    y_s = y_s + vy;
+    if (y_s < 0){
+      y_s = height;
+    }
+    
+    if (y_s > height){
+    y_s = 0;
+    }
+    
+    if (x_s < 0){
+      x_s = width;
+    }
+    
+    if (x_s > width){
+      x_s = 0;
+    }
+  }
+}
+
+
+
+//void surprise() {
+//  image(img, 0, 0);
+//  if (millis()/1000%2==0) {
+//    filter(INVERT);
+//  } else {
+//    filter(POSTERIZE, 3);
+//  }
+//  //filter(THRESHOLD);
+//}
 
 
 
