@@ -3,6 +3,7 @@
 //joy inspired by artisan's https://openprocessing.org/sketch/696867
 //surprise inspired by the coding train painting with pixels https://www.youtube.com/watch?v=NbX3RnlAyGU&t=435s
 
+String URL = "http://raspberrypi10.local:8000/";
 
 PImage img;
 JSONObject json;
@@ -111,9 +112,10 @@ void draw() {
 void loadNewImage(int imageCounter) {
   background(0);
   println("Loading " + imageCounter+".jpg");
-  img = loadImage(imageCounter+".jpg");
-  json = loadJSONObject(imageCounter+".json");
-  id = json.getInt("id");
+  img = loadImage(URL + imageCounter+".jpg");
+  json = loadJSONObject(URL + imageCounter+".json");
+  //id = json.getInt("id");
+  id = imageCounter;
   joy = json.getInt("joy");
   anger = json.getInt("anger");
   surprise = json.getInt("surprise");
