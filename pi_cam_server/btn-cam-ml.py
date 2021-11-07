@@ -31,6 +31,7 @@ ledPercentage = 100.0
 takingPicture = False
 imgNumber = 0
 
+code_lookup = { "VERY_UNLIKELY": 0, "UNLIKELY": 1, "UNKNOWN": 2, "POSSIBLE": 3, "LIKELY": 4, "VERY_LIKELY": 5, "UNRECOGNIZED": -1} 
 
 def __img_file_name():
     global imgNumber
@@ -136,10 +137,10 @@ def take_picture():
 
             # write json file with detections
             emotions = {
-                'anger': anger_likelihood,
-                'joy': joy_likelihood,
-                'surprise': surprise_likelihood,
-                'sorrow': sorrow_likelihood
+                'anger': code_lookup[anger_likelihood],
+                'joy': code_lookup[joy_likelihood],
+                'surprise': code_lookup[surprise_likelihood],
+                'sorrow': code_lookup[sorrow_likelihood]
             }
 
             print('saving emotions to json file: ' + __json_file_path())
