@@ -5,6 +5,33 @@
 
 String URL = "http://raspberrypi10.local:8000/";
 
+
+// FOR TEXT 
+String angerList = "We never know when but being cheerful helps:If you don’t like it you may choose to avoid it :What is meant by Judge and regardless of the consequences? : If we are irritated it is not a pleasure: The important questions are answered not by liking only but disliking and accepting equally what one likes and dislikes. Otherwise there is no access to the dark night of the soul: A fire rages: It is not irritating to be where one is, it is only irritating to think one would like to be somewhere else";
+String angerArray[] = split (angerList, ':'); 
+
+String joyList = "-When in the state of nothing, one diminished the something in one: Life seems shabby and chaotic, disordered, ugly in contrast:What are the important questions and what is that greater earnestness that is required:Blackbirds rise from a field making a sound delicious beyond compare: Life is one: Each moment is absolute, alive and significant";
+String joyArray[] = split(joyList, ':');
+
+String surpriseList ="Let us say in life: no earthquakes are permissible. What happens then?:The idea, consequences, suggests musical term continuity: To accept whatever comes regardless of the consequences:How do you feel about Bach?:Next time he hears the piece, it will be different, perhaps less interesting, perhaps suddenly exciting: Anything may happen and it all does go together ";
+String surpriseArray[] = split (surpriseList, ':');
+
+String sorrowList = "There seemed to be no truth, no good, in anything big in society.:At any moment one is free to take on character again, but then it is without fear, full of life and love: We have found that by excluding we grow thin inside:When nothing is securly possessed one is free to accept any of the somethings:After several years of working alone, I began to feel lonely.:Falling down on some of one of the various banana peels is what we have been calling tragedy";
+String sorrowArray[] = split (sorrowList, ':');
+PFont font;
+int textNum;
+String displayText;
+
+int textX, textY, textHue;
+
+
+// WHICH EMOTION EFFECT IS BEING DISPLAYED? 
+// USED FOR BOTH IMAGE EFFECTS AND TEXT DISPLAY
+String emotion = ""; // values can be "joy", "anger", "surprise", or "sorrow"
+String[] emotions = {"joy", "anger", "surprise", "sorrow"};
+
+
+// FOR IMAGE EFFECTS
 PImage img;
 JSONObject json;
 
@@ -29,7 +56,7 @@ Particle_3[] particles_3;
 float b, c, vx, vy;
 
 int timeElapsed; //milliseconds
-int imageCounter = 1;
+int imageCounter = 0;
 
 //adjusting the values for color in HSB hue, saturation and saturation, this happens within the loadNewImage function
 int pixelHue = 5;
@@ -51,17 +78,16 @@ void setup() {
   init_anger();
 
   init_joy();
-  
+
   init_surprise();
-  
 }
 
 void draw() {
   //background(0);
   //image(img,0,0);
 
+  // if image has been displaying for a while, try and load a new image
   int timeImageLoadedFor = millis() - timeElapsed;
-
   if (timeImageLoadedFor>25000)
   {
     clear();
@@ -80,33 +106,35 @@ void draw() {
       timeElapsed = millis();
       reset_anger();
     }
-
   }
 
-  if (surprise >=1) {
+
+  // display image effects depending on the emotion
+  if ( emotion.equals("surprise") ) {
     surprise();
   }
-  if (sorrow>=1) {
+  else if ( emotion.equals("sorrow") ) {
     sorrow();
     //filter(POSTERIZE,5);
     filter(GRAY);
   }
-
-  if (anger>=1) {
+  else if ( emotion.equals("anger") ) {
     repforce = anger*2;
     attforce = anger*0.2;
     anger();
     //filter(POSTERIZE, 8);
     //filter(GRAY);
   }
-  if (joy >= 1) {
+  else if ( emotion.equals("joy") ) {
     spread = joy;
     joy();
   }
 
   noStroke();
 
-  puText();
+  // display text
+  // puText();
+  quoteText();
 }
 
 void loadNewImage(int imageCounter) {
@@ -121,14 +149,31 @@ void loadNewImage(int imageCounter) {
   surprise = json.getInt("surprise");
   sorrow = json.getInt("sorrow");
   timeElapsed = millis();
-  
+
   //resizing image to fit width and haight, considering all images will be the same format
-  img.resize(width,height);
-  
+  img.resize(width, height);
+
   //changing Hue Saturation and Brightness. This function could be applied 
   //at each emotion effect level for more control if preferred
   adjustColor();
-
+  
+  // choose the emotion status depending on emotional likelihoods
+  if (surprise >= 3) {
+    emotion = "surprise";
+  } 
+  else if (sorrow >= 3) {
+    emotion = "sorrow";
+  }
+  else if (anger >= 3) {
+    emotion = "anger";
+  }
+  else if (joy >= 3) {
+    emotion = "joy"; 
+  } else { // if no emotion is detected, pick one at random
+    emotion = emotions[int(random(emotions.length))];
+  }
+  
+  chooseDisplayText();
 }
 
 // ANGER __________________________________________________
@@ -148,12 +193,11 @@ void reset_anger() {
     p.reset();
   }
 }
-  
+
 
 void anger() {
   if (millis() < 2000) {
     image(img, 0, 0);
-
   }
   //else{
   //  fill(0,20);  
@@ -205,7 +249,7 @@ class Particle {
     stroke(color_anger, 90);
     point(position.x, position.y);
   }
-  
+
   void reset() {
     position.x = random(width);
     position.y = random(height);
@@ -237,7 +281,7 @@ void sorrow() {
 //function to initiate joy in setup
 void init_joy() {
   spread = 1;
-  inc = random(0.1,0.8);
+  inc = random(0.1, 0.8);
   num = 5000;
   col = random(255);
   cols = floor(width/spread)+1;
@@ -347,7 +391,7 @@ class Particle_2 {
 
 
 // SURPRISE  -------------------------------------
-void init_surprise(){
+void init_surprise() {
   //particles_3 = newArrayList<Particle_3>();
   particles_3 = new Particle_3[200];
   for (int i = 0; i < particles_3.length; i++) {
@@ -364,8 +408,7 @@ void surprise() {
   for (int i = 0; i < particles_3.length; i++) {
     particles_3[i].display_s();
     particles_3[i].move_s();
-  
- }
+  }
 }
 
 
@@ -373,10 +416,10 @@ void surprise() {
 class Particle_3 {
   float x_s;
   float y_s;
-  
+
   float vx;
   float vy;
-  
+
   Particle_3() {
     x_s = width/2;
     y_s =(height/2)+100;
@@ -385,31 +428,31 @@ class Particle_3 {
     vx = cos(a)*speed_s;
     vy = sin(a)*speed_s;
   }
-  
-  void display_s(){
+
+  void display_s() {
     //noStroke();
     color c_s = img.get(int(x_s), int(y_s));
     fill(c_s);
     //ellipse(x,y,30,30);
-    rect(x_s,y_s,30,30);
+    rect(x_s, y_s, 30, 30);
   }
-  
-  void move_s(){
+
+  void move_s() {
     x_s = x_s + vx; // random(-5,5);
     y_s = y_s + vy;
-    if (y_s < 0){
+    if (y_s < 0) {
       y_s = height;
     }
-    
-    if (y_s > height){
-    y_s = 0;
+
+    if (y_s > height) {
+      y_s = 0;
     }
-    
-    if (x_s < 0){
+
+    if (x_s < 0) {
       x_s = width;
     }
-    
-    if (x_s > width){
+
+    if (x_s > width) {
       x_s = 0;
     }
   }
@@ -432,19 +475,42 @@ class Particle_3 {
 // SATURATION BRUGHTNESS ADJUSTMENT_______________________________
 
 void adjustColor() {
-    img.loadPixels();
-    for (int i = 0; i < img.pixels.length; i++) {
-        float hue = hue(img.pixels[i]);
-        float sat= saturation(img.pixels[i]);
-        float bright = brightness(img.pixels[i]);
-        img.pixels[i] = color(hue + pixelHue, sat +pixelSaturation, bright+ pixelBrightness);
-      }
-  img.updatePixels(); 
-
+  img.loadPixels();
+  for (int i = 0; i < img.pixels.length; i++) {
+    float hue = hue(img.pixels[i]);
+    float sat= saturation(img.pixels[i]);
+    float bright = brightness(img.pixels[i]);
+    img.pixels[i] = color(hue + pixelHue, sat +pixelSaturation, bright+ pixelBrightness);
+  }
+  img.updatePixels();
 }
 
 
 //TEXT -----------------------------------------------------
+
+void chooseDisplayText() {
+  // choose the displayText depending on emotional likelihoods
+  if ( emotion.equals("surprise") ) {
+    displayText = surpriseArray[int(random(surpriseArray.length))];
+  } 
+  else if ( emotion.equals("sorrow") ) {
+    displayText = sorrowArray[int(random(sorrowArray.length))];
+  }
+  else if ( emotion.equals("anger") ) {
+    displayText = angerArray[int(random(angerArray.length))];
+  }
+  else if ( emotion.equals("joy" ) ) {
+    displayText = joyArray[int(random(joyArray.length))];
+  } else {
+    displayText = "";
+  }
+  print("displayText = ", displayText);
+  
+  textX = width;
+  textY = int(random(100, height-100));
+  textHue = int(random(100));
+}
+
 //test text function
 void puText() {
   textSize(50);
@@ -453,4 +519,41 @@ void puText() {
   text("anger "+ str(anger), 50, 300);
   text("surprise "+str(surprise), 50, 400);
   text("sorrow " +str(sorrow), 50, 500);
+}
+
+void quoteText() {
+  //textNum = int(random(6));
+  font = createFont("Arial", 100, true); 
+  textFont(font);
+  textSize(100);
+  
+  //displayText = angerArray[textNum] + joyArray[textNum] + sorrowArray[textNum] + surpriseArray[textNum];
+
+  if (textX < 0) {
+    // drawing the text, offset, in dark beforehand gives it a dark "shadow"
+    // a cheap n easy way to help readability
+    fill(textHue, 100, 80);
+    text(displayText, textX + textWidth(displayText) + 50 + 5, textY);
+    fill(textHue, 255, 255);
+    text(displayText, textX + textWidth(displayText) + 50, textY);
+  }
+
+  // if the first copy of the text is completely offscreen, set x to be 
+  // at the current location of the second copy
+  if (textX <= -textWidth(displayText)) {
+    textX = textX + (int)textWidth(displayText) + 50;
+  }
+
+  // Draw the text
+  // drawing the text, offset, in dark beforehand gives it a dark "shadow"
+  // a cheap n easy way to help readability
+  fill(textHue, 100, 80);
+  text(displayText, textX+5, textY);
+  fill(textHue, 255, 255);
+  text(displayText, textX, textY);
+  // move the position to the left
+  textX = textX - 3;
+  // textX--;
+
+  // println( completeTest);
 }
