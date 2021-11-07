@@ -508,7 +508,7 @@ void chooseDisplayText() {
   
   textX = width;
   textY = int(random(100, height-100));
-  textHue = int(random(100));
+  textHue = int(random(255));
 }
 
 //test text function
@@ -552,7 +552,7 @@ void quoteText() {
   fill(textHue, 255, 255);
   text(displayText, textX, textY);
   // move the position to the left
-  textX = textX - 3;
+  textX = textX - 8;
   // textX--;
 
   // println( completeTest);
