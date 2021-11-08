@@ -68,7 +68,8 @@ int pixelBrightness = 100;
 void setup() {
   strokeWeight(int(random(2, 20)));
   background(0);
-  size(800, 600);
+  fullScreen(SPAN);
+  //size(800, 600);
   colorMode(HSB);
   //img.resize(width,height);
 
@@ -135,11 +136,19 @@ void draw() {
   // display text
   // puText();
   quoteText();
+  
+  if (mousePressed == true) {
+    exit();
+  }
 }
 
 void loadNewImage(int imageCounter) {
   background(0);
   println("Loading " + imageCounter+".jpg");
+  
+  //img = loadImage(imageCounter+".jpg");
+  //json = loadJSONObject(imageCounter+".json");
+  
   img = loadImage(URL + imageCounter+".jpg");
   json = loadJSONObject(URL + imageCounter+".json");
   //id = json.getInt("id");
