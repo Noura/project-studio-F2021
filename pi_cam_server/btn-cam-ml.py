@@ -31,7 +31,7 @@ ledPercentage = 100.0
 takingPicture = False
 imgNumber = 0
 
-code_lookup = { "VERY_UNLIKELY": 0, "UNLIKELY": 1, "UNKNOWN": 2, "POSSIBLE": 3, "LIKELY": 4, "VERY_LIKELY": 5, "UNRECOGNIZED": -1} 
+code_lookup = { "VERY_UNLIKELY": 0, "UNLIKELY": 1, "UNKNOWN": 2, "POSSIBLE": 3, "LIKELY": 4, "VERY_LIKELY": 5, "UNRECOGNIZED": -1}
 
 def __img_file_name():
     global imgNumber
@@ -97,6 +97,14 @@ def take_picture():
         if(len(faces) <= 0):
             print('No faces detected!')
 
+        # write json file with detections
+        emotions = {
+            'anger': 0,
+            'joy': 0,
+            'surprise': 0,
+            'sorrow': 0
+        }
+
         for face in faces:
             print('face detected, checking for emotions...')
 
@@ -135,7 +143,6 @@ def take_picture():
             # print('surprise: {}'.format(surprise_likelihood))
             # print('sorrow: {}'.format(sorrow_likelihood))
 
-            # write json file with detections
             emotions = {
                 'anger': code_lookup[anger_likelihood],
                 'joy': code_lookup[joy_likelihood],
@@ -143,9 +150,9 @@ def take_picture():
                 'sorrow': code_lookup[sorrow_likelihood]
             }
 
-            print('saving emotions to json file: ' + __json_file_path())
-            with open(__json_file_path(), 'w', encoding='utf-8') as f:
-                json.dump(emotions, f, ensure_ascii=False, indent=4)
+        print('saving emotions to json file: ' + __json_file_path())
+        with open(__json_file_path(), 'w', encoding='utf-8') as f:
+            json.dump(emotions, f, ensure_ascii=False, indent=4)
 
         imgNumber += 1
         takingPicture = False
