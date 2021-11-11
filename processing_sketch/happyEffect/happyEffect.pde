@@ -89,7 +89,7 @@ void draw() {
 
   // if image has been displaying for a while, try and load a new image
   int timeImageLoadedFor = millis() - timeElapsed;
-  if (timeImageLoadedFor>25000)
+  if (timeImageLoadedFor>15000)
   {
     clear();
     try {
@@ -534,7 +534,7 @@ void quoteText() {
   //textNum = int(random(6));
   font = createFont("Arial", 100, true); 
   textFont(font);
-  textSize(100);
+  textSize(150);
   
   //displayText = angerArray[textNum] + joyArray[textNum] + sorrowArray[textNum] + surpriseArray[textNum];
 
@@ -542,7 +542,7 @@ void quoteText() {
     // drawing the text, offset, in dark beforehand gives it a dark "shadow"
     // a cheap n easy way to help readability
     fill(textHue, 100, 80);
-    text(displayText, textX + textWidth(displayText) + 50 + 5, textY);
+    text(displayText, textX + textWidth(displayText) + 50 + 10, textY);
     fill(textHue, 255, 255);
     text(displayText, textX + textWidth(displayText) + 50, textY);
   }
@@ -561,7 +561,7 @@ void quoteText() {
   fill(textHue, 255, 255);
   text(displayText, textX, textY);
   // move the position to the left
-  textX = textX - 8;
+  textX = textX - 100;
   // textX--;
 
   // println( completeTest);
