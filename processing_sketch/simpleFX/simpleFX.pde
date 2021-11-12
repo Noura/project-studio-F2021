@@ -49,7 +49,7 @@ void draw() {
 
   quoteText();
 
-  if (millis() - lastTimeStamp > 15000) {
+  if (millis() - lastTimeStamp > 25000) {
     chooseRandomEmotion();
     chooseDisplayText();
     lastTimeStamp = millis(); 
