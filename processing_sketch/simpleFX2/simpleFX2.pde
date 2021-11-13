@@ -3,7 +3,9 @@
 //joy inspired by artisan's https://openprocessing.org/sketch/696867
 //surprise inspired by the coding train painting with pixels https://www.youtube.com/watch?v=NbX3RnlAyGU&t=435s
 
+// String URL = "../../test_images/";
 String URL = "http://raspberrypi10.local:8000/";
+
 int imageCounter = 0;
 
 // FOR TEXT 
@@ -25,7 +27,7 @@ String displayText;
 int textX, textY, textHue;
 
 // FOR IMAGE EFFECTS
-PImage img;
+PImage img, new_img;
 JSONObject json;
 int joy, anger, surprise, sorrow;
 
@@ -37,15 +39,10 @@ String[] emotions = {"joy", "anger", "surprise", "sorrow"};
 int lastTimeStamp = millis();
 
 void setup() {
-  strokeWeight(int(random(2, 20)));
   background(0);
   //fullScreen(SPAN);
   size(800, 600);
   colorMode(HSB);
-  //img.resize(width,height);
-  
-  img = loadImage("data/4.jpg");
-  img.resize(width, height);
   
   chooseRandomEmotion();
   chooseDisplayText();
@@ -58,7 +55,7 @@ void draw() {
 
   quoteText();
 
-  if (millis() - lastTimeStamp > 25000) {
+  if (millis() - lastTimeStamp > 45000) {
     chooseRandomEmotion();
     tryLoadNewImage();
     chooseDisplayText();
@@ -71,15 +68,14 @@ void chooseRandomEmotion() {
 }
 
 void tryLoadNewImage() {
+  imageCounter++;
+  
   background(0);
-  println("Loading " + imageCounter+".jpg");
+  println("\ntry Loading " + imageCounter+ ".jpg");
   
   try {
-    imageCounter++;
-    
-    img = loadImage(URL + imageCounter+".jpg");
-    img.resize(width, height);
-    image(img,0,0);
+    new_img = loadImage(URL + imageCounter+".jpg");
+    new_img.resize(width, height);
     
     json = loadJSONObject(URL + imageCounter+".json");
     
@@ -88,11 +84,14 @@ void tryLoadNewImage() {
     surprise = json.getInt("surprise");
     sorrow = json.getInt("sorrow");
     
+    img = new_img;
+    image(img,0,0);
+    
     clear();
   }
   catch (Exception e) {
+    println("\n", imageCounter + ".jpg not found. Reusing current image.");
     imageCounter--;
-    println((imageCounter+1) + ".jpg not found. Reloading current image.");
   }
   finally {
 
@@ -113,6 +112,8 @@ void tryLoadNewImage() {
   } else { // if no emotion is detected, pick one at random
     emotion = emotions[int(random(emotions.length))];
   }
+  
+  println("emotion: ", emotion);
 }
 
 //TEXT -----------------------------------------------------
@@ -133,7 +134,7 @@ void chooseDisplayText() {
   } else {
     displayText = "";
   }
-  print("displayText = ", displayText);
+  println("displayText = ", displayText);
   
   textX = width;
   textY = int(random(100, height-100));
